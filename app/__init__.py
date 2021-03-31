@@ -7,6 +7,9 @@ from .config import Config
 from .seeds import seed_commands
 from .models import db
 
+from .api.task_routes import task_routes
+from .api.list_routes import list_routes
+
 #app intialization
 app = Flask(__name__)
 
@@ -18,3 +21,7 @@ app.cli.add_command(seed_commands)
 #DB initialization
 db.init_app(app)
 Migrate(app, db)
+
+#Blueprints
+app.register_blueprint(task_routes, url_prefix='/api/tasks')
+app.register_blueprint(list_routes, url_prefix='/api/lists')
