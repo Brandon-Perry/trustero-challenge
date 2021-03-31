@@ -7,5 +7,5 @@ class Comment(db.Model):
     __tablename__ = 'comments'
 
     id = db.Column(db.Integer, primary_key=True)
-    task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
+    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'), nullable=False)
     comment_text = db.Column(db.String(500), nullable=False)
