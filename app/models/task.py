@@ -15,3 +15,11 @@ class Task(db.Model):
 
     comments = db.relationship('Comment', backref='tasks', lazy=True)
 
+    def to_dict(self):
+        return {
+            'title': self.title,
+            'description': self.description,
+            'status':self.status,
+            'list_id':self.list_id,
+            'comments':self.comments
+            }

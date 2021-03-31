@@ -12,3 +12,8 @@ class List(db.Model):
     name = db.Column(db.String(50), nullable=False)
 
     db.relationship('Task', backref='lists', lazy=True)
+
+    def to_dict(self):
+        return {
+            'name':self.name,
+        }
