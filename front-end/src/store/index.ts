@@ -1,28 +1,46 @@
-import {createStore, combineReducers, applyMiddleware, compose} from 'redux'
-import thunk from 'redux-thunk';
+// import {createStore, combineReducers, applyMiddleware, compose} from '@reduxjs/toolkit'
+// import {thunk} from  '@reduxjs/toolkit';
 
-declare global {
-    interface Window {
-      __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-    }
-}
+// declare global {
+//     interface Window {
+//       __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+//     }
+// }
 
-const rootReducer = combineReducers({
+// const rootReducer = combineReducers({
     
+// })
+
+// let enhancer:any;
+
+// if (process.env.NODE_ENV === 'production') {
+//     enhancer = applyMiddleware(thunk)
+// } else {
+//     const logger = require('redux-logger').default;
+//     const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+//     enhancer = composeEnhancer(applyMiddleware(thunk, logger))
+// }
+
+// const configureStore = () => {
+//     return createStore(rootReducer, enhancer)
+// }
+
+// export default configureStore
+
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import logger from 'redux-logger'
+
+const store = configureStore({
+  reducer: {
+    
+  },
+  middleware: (getDefaultMiddleware) => 
+    getDefaultMiddleware()
+      .concat(logger)
 })
 
-let enhancer:any;
+//Infer the 'RootState' and 'AppDispatch' types from the store itself
+export type RootState = ReturnType<typeof store.getState>
 
-if (process.env.NODE_ENV === 'production') {
-    enhancer = applyMiddleware(thunk)
-} else {
-    const logger = require('redux-logger').default;
-    const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-    enhancer = composeEnhancer(applyMiddleware(thunk, logger))
-}
-
-const configureStore = () => {
-    return createStore(rootReducer, enhancer)
-}
-
-export default configureStore
+// Inferred type: {}
+export type AppDispatch = typeof store.dispatch
