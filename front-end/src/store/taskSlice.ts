@@ -1,21 +1,46 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+// import {AppThunk} from './index'
 
-const initialState:any[] = []
+export interface Comment {
+    task_id:number,
+    comment_text:string,
+}
 
-const todoSlice = createSlice({
-    name: 'stuff',
+export interface Task {
+    id:number,
+    title:string,
+    description:string,
+    status:boolean,
+    list_id:number,
+    comments:Comment[]
+}
+
+export interface TaskList {
+    tasks:Task[]
+}
+
+
+export const initialState: TaskList = {
+    tasks:[]
+}
+
+
+const taskSlice = createSlice({
+    name: 'tasks',
     initialState,
     reducers: {
-        todoAdded(state, action) {
-            state.push(action.payload)
+        setTaskList: (state, action: PayloadAction<Task[]>) => {
+            state.tasks = action.payload
         },
-        todoToggled(state,action) {
-            const todo = state.find(todo => todo.id === action.payload)
-            todo.completed = !todo.completed
-        }
+        removeTask: (state, action: PayloadAction<number>) => {
+            state.tasks = state.tasks.filter((task:Task) => task.id !== action.payload)
+        },
+        // addTaskList: (state, action: PayloadAction<Task>) => {
+            
+        // }
     }
 })
 
-export const {todoAdded, todoToggled} = todoSlice.actions
+export const {setTaskList, removeTask} = taskSlice.actions
 
-export default todoSlice.reducer
+export default taskSlice.reducer

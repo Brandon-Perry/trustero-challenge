@@ -27,8 +27,9 @@
 
 // export default configureStore
 
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { configureStore, getDefaultMiddleware, Action } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
+import {ThunkAction} from 'redux-thunk'
 
 const store = configureStore({
   reducer: {
@@ -44,3 +45,7 @@ export type RootState = ReturnType<typeof store.getState>
 
 // Inferred type: {}
 export type AppDispatch = typeof store.dispatch
+
+export type Appthunk = ThunkAction<void, RootState, unknown, Action>
+
+export default store
