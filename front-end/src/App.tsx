@@ -1,17 +1,16 @@
 import React from 'react';
 import './App.css';
+import {useAppDispatch} from './store/hooks'
+import taskSlice from './store/taskSlice'
+import {addTaskListThunk} from './store/taskSlice'
 
 function App() {
 
+  const dispatch = useAppDispatch()
+
   const getInfo = async () => {
-    let tasksRes = await fetch('/api/lists/4', {
-      method: 'DELETE',
-        
-    })
-      
-    console.log(tasksRes)
-    let tasksJson = await tasksRes.json()
-    console.log(tasksJson)
+    dispatch(addTaskListThunk('this is a test'))
+    
   }
 
   return (

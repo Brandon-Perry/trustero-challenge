@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import { AppDispatch, Appthunk } from '.'
 // import {AppThunk} from './index'
 
 export interface Comment {
@@ -21,7 +22,7 @@ export interface TaskList {
 
 
 export const initialState: TaskList = {
-    tasks:[]
+    tasks:[],
 }
 
 
@@ -35,12 +36,27 @@ const taskSlice = createSlice({
         removeTask: (state, action: PayloadAction<number>) => {
             state.tasks = state.tasks.filter((task:Task) => task.id !== action.payload)
         },
-        // addTaskList: (state, action: PayloadAction<Task>) => {
-            
-        // }
+        appendOne: (state, action: PayloadAction<Task>) => {
+            state.tasks = [action.payload]
+        },
     }
 })
 
-export const {setTaskList, removeTask} = taskSlice.actions
+export const {setTaskList, removeTask, appendOne} = taskSlice.actions
 
 export default taskSlice.reducer
+
+export const addTaskListThunk = (
+    text:string
+): Appthunk => async (dispatch: AppDispatch) => {
+    const newTask : Task = {
+        id:20,
+        title: 'test',
+        description: text,
+        status: false,
+        list_id: 1,
+        comments: []
+    }
+
+    dispatch(taskSlice.actions.appendOne(newTask))
+}

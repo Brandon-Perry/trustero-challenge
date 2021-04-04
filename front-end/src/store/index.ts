@@ -31,9 +31,11 @@ import { configureStore, getDefaultMiddleware, Action } from '@reduxjs/toolkit'
 import logger from 'redux-logger'
 import {ThunkAction} from 'redux-thunk'
 
+import taskSlice from './taskSlice'
+
 const store = configureStore({
   reducer: {
-    
+    taskSlice
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware()
