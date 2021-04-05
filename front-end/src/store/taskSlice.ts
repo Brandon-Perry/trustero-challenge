@@ -38,6 +38,9 @@ const taskSlice = createSlice({
         removeTask: (state, action: PayloadAction<number>) => {
             state.tasks = state.tasks.filter((task:Task) => task.id !== action.payload)
         },
+        addTask: (state, action: PayloadAction<Task>) => {
+            state.tasks = [...state.tasks, action.payload]
+        },
         appendOne: (state, action: PayloadAction<Task>) => {
             state.tasks = [action.payload]
         },
@@ -65,8 +68,21 @@ export const addTaskListThunk = (
 
 
 export const fetchTasks = () => async (dispatch:any) => {
-    console.log('hit fetchTasks')
     const tasksRes = await fetch('/api/tasks/')
     const data = await tasksRes.json()
     dispatch(taskSlice.actions.setTaskList(data))
   };
+
+export const addTask = (title:string, description:string, list_id?:number) => async (dispatch:any) => {
+    const taskRes = await fetch('/api/tasks/', {
+        method:'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+            'title':title,
+            'description':description,
+            'list_id':list_id
+        })
+    })
+    const data = await taskRes.json()
+    dispatch(taskSlice.actions.addTask(data))
+}

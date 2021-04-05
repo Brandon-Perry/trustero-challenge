@@ -29,7 +29,9 @@ def create_task():
 
     new_task.title = request.get_json().get('title')
     new_task.description = request.get_json().get('description')
-    new_task.list_id = request.get_json().get('list_id')
+    if (request.get_json().get('list_id') != None):
+        new_task.list_id = request.get_json().get('list_id')
+     
     db.session.add(new_task)
     db.session.commit()
 
