@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import { Dispatch } from 'react'
+import { act } from 'react-dom/test-utils'
 import { useAppDispatch } from './hooks'
 import { AppDispatch, Appthunk } from './index'
 // import {AppThunk} from './index'
@@ -40,6 +41,14 @@ const taskSlice = createSlice({
         },
         addTask: (state, action: PayloadAction<Task>) => {
             state.tasks = [...state.tasks, action.payload]
+        },
+        changeTask: (state, action: PayloadAction<Task>) => {
+            state.tasks.forEach((task:Task, i)=> {
+                if (task.id === action.payload.id) {
+                    state.tasks[i] = action.payload
+                    return state.tasks
+                }
+            })
         },
         appendOne: (state, action: PayloadAction<Task>) => {
             state.tasks = [action.payload]
@@ -94,4 +103,18 @@ export const deleteTask = (id:number) => async (dispatch:any) => {
     })
     console.log(res)
     dispatch(taskSlice.actions.removeTask(id))
+}
+
+export const editTask = (id:number,title:string,description:string,list_id?:number) => async(dispatch:any) => {
+    const taskRes = await fetch(`/api/tasks/${id}`, {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+            'title': title,
+            'description':description,
+            'list_id':list_id
+        })
+    })
+    const data = await taskRes.json()
+    dispatch(taskSlice.actions.changeTask(data))
 }

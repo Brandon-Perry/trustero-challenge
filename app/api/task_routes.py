@@ -47,6 +47,7 @@ def edit_task(id):
     task.title = request.get_json().get('title')
     task.description = request.get_json().get('description')
     task.list_id = request.get_json().get('list_id')
+
     db.session.commit()
 
     data = task.to_dict()

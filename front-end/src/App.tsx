@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './App.css';
 import {useAppDispatch, useAppSelector} from './store/hooks'
 import taskSlice from './store/taskSlice'
-import {fetchTasks, addTaskListThunk, addTask, deleteTask} from './store/taskSlice'
+import {fetchTasks, addTaskListThunk, addTask, deleteTask, editTask} from './store/taskSlice'
 
 function App() {
 
@@ -19,7 +19,7 @@ function App() {
   const dispatch = useAppDispatch()
 
   const getInfo = async () => {
-    dispatch(deleteTask(2))
+    dispatch(editTask(2,'this should change originally binary tree','this should also change'))
     
   }
 
