@@ -86,3 +86,12 @@ export const addTask = (title:string, description:string, list_id?:number) => as
     const data = await taskRes.json()
     dispatch(taskSlice.actions.addTask(data))
 }
+
+export const deleteTask = (id:number) => async (dispatch:any) => {
+    const res = await fetch(`/api/tasks/${id}`,{
+        method: 'DELETE',
+        headers: {'Content-Type':'application/json'},
+    })
+    console.log(res)
+    dispatch(taskSlice.actions.removeTask(id))
+}

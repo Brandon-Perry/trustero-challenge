@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './App.css';
 import {useAppDispatch, useAppSelector} from './store/hooks'
 import taskSlice from './store/taskSlice'
-import {fetchTasks, addTaskListThunk, addTask} from './store/taskSlice'
+import {fetchTasks, addTaskListThunk, addTask, deleteTask} from './store/taskSlice'
 
 function App() {
 
@@ -19,7 +19,7 @@ function App() {
   const dispatch = useAppDispatch()
 
   const getInfo = async () => {
-    dispatch(addTask('this should work', 'test description'))
+    dispatch(deleteTask(2))
     
   }
 

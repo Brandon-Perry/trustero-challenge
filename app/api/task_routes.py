@@ -54,13 +54,20 @@ def edit_task(id):
     return jsonify(data)
 
 #Delete task - succeeds in deleting, need to add some success indicator
-@task_routes.route('<id>', methods=['DELETE'])
+@task_routes.route('/<id>', methods=['DELETE'])
 def delete_task(id):
-    task = Task.query.get(id)
+    
+    print('------')
+    print(id)
+    task = Task.query.get(int(id))
+    print(task)
     db.session.delete(task)
+    print('got past delete')
     db.session.commit()
+    print('got past commit')
+    print('------')
 
-    return 
+    return jsonify('success')
 
 
 def unpack_comments_from_task_list(taskList):
