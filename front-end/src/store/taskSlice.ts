@@ -1,5 +1,7 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import { AppDispatch, Appthunk } from '.'
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import { Dispatch } from 'react'
+import { useAppDispatch } from './hooks'
+import { AppDispatch, Appthunk } from './index'
 // import {AppThunk} from './index'
 
 export interface Comment {
@@ -60,3 +62,11 @@ export const addTaskListThunk = (
 
     dispatch(taskSlice.actions.appendOne(newTask))
 }
+
+
+export const fetchTasks = () => async (dispatch:any) => {
+    console.log('hit fetchTasks')
+    const tasksRes = await fetch('/api/tasks/')
+    const data = await tasksRes.json()
+    dispatch(taskSlice.actions.setTaskList(data))
+  };

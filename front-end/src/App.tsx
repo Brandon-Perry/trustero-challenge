@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
-import {useAppDispatch} from './store/hooks'
+import {useAppDispatch, useAppSelector} from './store/hooks'
 import taskSlice from './store/taskSlice'
-import {addTaskListThunk} from './store/taskSlice'
+import {fetchTasks, addTaskListThunk} from './store/taskSlice'
 
 function App() {
+
+  const taskList = useAppSelector(state => state.taskSlice.tasks)
+
+  useEffect(() => {
+    console.log(taskList)
+  }, [taskList])
 
   const dispatch = useAppDispatch()
 
   const getInfo = async () => {
     dispatch(addTaskListThunk('this is a test'))
+    dispatch(fetchTasks())
     
   }
 
@@ -17,6 +24,7 @@ function App() {
     <div className="App">
       
           <button onClick={getInfo}>Log test</button>
+
         
     </div>
   );
