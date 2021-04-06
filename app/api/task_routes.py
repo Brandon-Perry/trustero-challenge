@@ -64,7 +64,7 @@ def delete_task(id):
     print(task)
     db.session.delete(task)
     print('got past delete')
-    db.session.commit()
+    # db.session.commit()
     print('got past commit')
     print('------')
 

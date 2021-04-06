@@ -36,7 +36,11 @@ def create_list():
 #edit list - works
 @list_routes.route('/<id>', methods=['PUT'])
 def edit_list(id):
+    print('-------')
+    print(id)
     edit_list = List.query.get(id)
+    print(edit_list)
+    print('-------')
     edit_list.name = request.get_json().get('name')
     db.session.commit()
 

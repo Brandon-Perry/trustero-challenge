@@ -56,7 +56,7 @@ const taskSlice = createSlice({
     }
 })
 
-export const {setTaskList, removeTask, appendOne} = taskSlice.actions
+export const {setTaskList, removeTask, addTask, changeTask} = taskSlice.actions
 
 export default taskSlice.reducer
 
@@ -82,7 +82,7 @@ export const fetchTasks = () => async (dispatch:any) => {
     dispatch(taskSlice.actions.setTaskList(data))
   };
 
-export const addTask = (title:string, description:string, list_id?:number) => async (dispatch:any) => {
+export const createTask = (title:string, description:string, list_id?:number) => async (dispatch:any) => {
     const taskRes = await fetch('/api/tasks/', {
         method:'POST',
         headers: {'Content-Type':'application/json'},
@@ -115,6 +115,8 @@ export const editTask = (id:number,title:string,description:string,list_id?:numb
             'list_id':list_id
         })
     })
+    console.log(taskRes)
     const data = await taskRes.json()
+    console.log(data)
     dispatch(taskSlice.actions.changeTask(data))
 }

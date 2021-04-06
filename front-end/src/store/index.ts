@@ -32,10 +32,12 @@ import logger from 'redux-logger'
 import {ThunkAction} from 'redux-thunk'
 
 import taskSlice from './taskSlice'
+import listsSlice from './listsSlice'
 
 const store = configureStore({
   reducer: {
-    taskSlice
+    taskSlice,
+    listsSlice
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware()
