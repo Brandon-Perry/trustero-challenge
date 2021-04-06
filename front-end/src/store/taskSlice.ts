@@ -1,13 +1,20 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import { Dispatch } from 'react'
 import { act } from 'react-dom/test-utils'
+import { TupleType } from 'typescript'
 import { useAppDispatch } from './hooks'
 import { AppDispatch, Appthunk } from './index'
 // import {AppThunk} from './index'
 
 export interface Comment {
+    id:number,
     task_id:number,
     comment_text:string,
+}
+
+interface Comment_Delete {
+    comment_id:number,
+    task_id:number
 }
 
 export interface Task {
@@ -50,30 +57,51 @@ const taskSlice = createSlice({
                 }
             })
         },
-        appendOne: (state, action: PayloadAction<Task>) => {
-            state.tasks = [action.payload]
+        addComment: (state, action: PayloadAction<Comment>) => {
+            state.tasks.forEach((task:Task, i) => {
+                if (task.id === action.payload.task_id) {
+                    state.tasks[i].comments = [...state.tasks[i].comments, action.payload]
+                    return state.tasks
+                }
+            })
         },
+        removeComment: (state, action: PayloadAction<Comment_Delete>) => {
+            state.tasks.forEach((task:Task) => {
+                if (task.id === action.payload.task_id) {
+                    task.comments = task.comments.filter((comment:Comment) => comment.id !== action.payload.comment_id)
+                    return state.tasks
+                }
+            })
+        }
+        
     }
 })
 
-export const {setTaskList, removeTask, addTask, changeTask} = taskSlice.actions
+export const {
+    setTaskList, 
+    removeTask, 
+    addTask, 
+    changeTask,
+    addComment,
+    removeComment
+} = taskSlice.actions
 
 export default taskSlice.reducer
 
-export const addTaskListThunk = (
-    text:string
-): Appthunk => async (dispatch: AppDispatch) => {
-    const newTask : Task = {
-        id:20,
-        title: 'test',
-        description: text,
-        status: false,
-        list_id: 1,
-        comments: []
-    }
+// export const addTaskListThunk = (
+//     text:string
+// ): Appthunk => async (dispatch: AppDispatch) => {
+//     const newTask : Task = {
+//         id:20,
+//         title: 'test',
+//         description: text,
+//         status: false,
+//         list_id: 1,
+//         comments: []
+//     }
 
-    dispatch(taskSlice.actions.appendOne(newTask))
-}
+//     dispatch(taskSlice.actions.appendOne(newTask))
+// }
 
 
 export const fetchTasks = () => async (dispatch:any) => {
@@ -115,8 +143,32 @@ export const editTask = (id:number,title:string,description:string,list_id?:numb
             'list_id':list_id
         })
     })
-    console.log(taskRes)
     const data = await taskRes.json()
-    console.log(data)
     dispatch(taskSlice.actions.changeTask(data))
+}
+
+export const createComment = (comment_text:string, task_id:number) => async(dispatch:any) => {
+    const commentRes = await fetch(`/api/comments/task/${task_id}`, {
+        method:'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+            'comment_text':comment_text,
+        })
+    })
+    const data = await commentRes.json()
+    dispatch(taskSlice.actions.addComment(data))
+}
+
+export const deleteComment = (comment_id:number,task_id:number) => async(dispatch:any) => {
+    const res = await fetch(`/api/comments/${comment_id}`, {
+        method:'POST',
+        headers: {'Content-Type':'application/json'},
+    })
+    // const data = await res.json()
+    
+    const dispatchedObj:Comment_Delete = {
+        'comment_id':comment_id,
+        'task_id':task_id
+    }
+    dispatch(taskSlice.actions.removeComment(dispatchedObj))
 }

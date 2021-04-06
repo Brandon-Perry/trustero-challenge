@@ -3,7 +3,7 @@ import './App.css';
 import {useAppDispatch, useAppSelector} from './store/hooks'
 import taskSlice from './store/taskSlice'
 import listsSlice from './store/listsSlice'
-import {fetchTasks, createTask, deleteTask, editTask} from './store/taskSlice'
+import {fetchTasks, createTask, deleteTask, editTask, createComment, deleteComment} from './store/taskSlice'
 import {fetchLists, createList, deleteList, editList} from './store/listsSlice'
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
   const dispatch = useAppDispatch()
 
   const getInfo = async () => {
-    dispatch(deleteList(5))
+    dispatch(deleteComment(9,3))
     
   }
 
