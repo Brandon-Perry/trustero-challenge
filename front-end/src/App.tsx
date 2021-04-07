@@ -6,13 +6,18 @@ import {fetchLists, createList, deleteList, editList} from './store/listsSlice'
 import { Box, Button, Container, createStyles, Grid, makeStyles, Paper, Theme, Typography, TextField } from '@material-ui/core';
 
 import TaskItem from './components/TaskItem'
+import SideBar from './components/SlideBar'
 
 import {Task} from './store/taskSlice'
 import {List} from './store/listsSlice'
 
 export const useStyles = makeStyles((theme:Theme)=> {
   return createStyles({
-   
+    container: {
+      display:'flex',
+      justifyContent:'center',
+      flexDirection:'row'
+    },
     paperBody: {
       padding:theme.spacing(2),
       minHeight:'80vh',
@@ -48,11 +53,12 @@ export const useStyles = makeStyles((theme:Theme)=> {
 function App() {
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  
+
   const taskList:Task[] = useAppSelector(state => state.taskSlice.tasks)
   const listList:List[] = useAppSelector(state => state.listsSlice.lists)
 
   const [taskField, setTaskField] = useState<string>('')
+  const [sideBarStatus, setSideBarStatus] = useState<boolean>(false)
 
   useEffect(() => {
     dispatch(fetchTasks())
@@ -71,12 +77,18 @@ function App() {
     setTaskField(e.target.value)
   }
 
+  const changeSideBarStatus = (e:any) => {
+    setSideBarStatus(!sideBarStatus)
+  }
+
   
   
   return (
-    <Container>
+    <Container className={classes.container}>
+      <Box>
       <Paper className={classes.paperHead}>
         <Box className={classes.addTaskBox}>
+          <button onClick={changeSideBarStatus}>Press me</button>
 
           <TextField 
             onKeyPress={enterTask} 
@@ -102,6 +114,11 @@ function App() {
           )) : null}
         </Grid>
       </Paper>
+      </Box>
+      <Box>
+        {sideBarStatus ? <SideBar {...taskList[0]} />
+        : null}
+      </Box>
     </Container>
   );
 }
