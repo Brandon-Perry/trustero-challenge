@@ -28,7 +28,8 @@ def create_task():
     new_task = Task()
 
     new_task.title = request.get_json().get('title')
-    new_task.description = request.get_json().get('description')
+    if (request.get_json().get('description') != None):
+        new_task.description = request.get_json().get('description')
     if (request.get_json().get('list_id') != None):
         new_task.list_id = request.get_json().get('list_id')
      

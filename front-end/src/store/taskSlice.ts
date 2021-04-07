@@ -110,7 +110,7 @@ export const fetchTasks = () => async (dispatch:any) => {
     dispatch(taskSlice.actions.setTaskList(data))
   };
 
-export const createTask = (title:string, description:string, list_id?:number) => async (dispatch:any) => {
+export const createTask = (title:string, description?:string, list_id?:number) => async (dispatch:any) => {
     const taskRes = await fetch('/api/tasks/', {
         method:'POST',
         headers: {'Content-Type':'application/json'},
