@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState, KeyboardEvent, ChangeEvent } from 'react';
 import './App.css';
 import {useAppDispatch, useAppSelector} from './store/hooks'
 import {fetchTasks, createTask, deleteTask, editTask, createComment, deleteComment} from './store/taskSlice'
@@ -8,6 +8,7 @@ import { Box, Button, Container, createStyles, Grid, makeStyles, Paper, Theme, T
 import TaskItem from './components/TaskItem'
 
 import {Task} from './store/taskSlice'
+import {List} from './store/listsSlice'
 
 export const useStyles = makeStyles((theme:Theme)=> {
   return createStyles({
@@ -47,10 +48,11 @@ export const useStyles = makeStyles((theme:Theme)=> {
 function App() {
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const taskList = useAppSelector(state => state.taskSlice.tasks)
-  const listList = useAppSelector(state => state.listsSlice.lists)
+  
+  const taskList:Task[] = useAppSelector(state => state.taskSlice.tasks)
+  const listList:List[] = useAppSelector(state => state.listsSlice.lists)
 
-  const [taskField, setTaskField] = useState('')
+  const [taskField, setTaskField] = useState<string>('')
 
   useEffect(() => {
     dispatch(fetchTasks())
@@ -58,14 +60,14 @@ function App() {
   },[])
 
 
-  const enterTask = (e:any) => {
+  const enterTask = (e:KeyboardEvent) => {
     if (e.code === 'Enter' && taskField) {
       dispatch(createTask(taskField))
       setTaskField('')
     }
   }
 
-  const updateTaskField = (e:any) => {
+  const updateTaskField = (e:ChangeEvent<HTMLTextAreaElement>) => {
     setTaskField(e.target.value)
   }
 
