@@ -75,8 +75,6 @@ def delete_task(id):
 
     db.session.delete(task)
     db.session.commit()
-    print('got past commit')
-    print('------')
 
     return jsonify('success')
 

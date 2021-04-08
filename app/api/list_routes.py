@@ -54,4 +54,4 @@ def delete_list(id):
     db.session.delete(the_list)
     db.session.commit()
 
-    return 
+    return jsonify('success')

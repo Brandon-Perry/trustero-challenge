@@ -5,9 +5,11 @@ import taskSlice, {fetchTasks, createTask, deleteTask, editTask, createComment, 
 import {fetchLists, createList, deleteList, editList} from './store/listsSlice'
 import { Box, Button, Container, createStyles, Grid, makeStyles, Paper, Theme, Typography, TextField, Select, MenuItem, FormHelperText } from '@material-ui/core';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EditIcon from '@material-ui/icons/Edit';
 
 import TaskItem from './components/TaskItem'
 import SideBar from './components/SlideBar'
+import EditListModal from './components/EditListModal'
 
 import {Task} from './store/taskSlice'
 import {List} from './store/listsSlice'
@@ -82,6 +84,7 @@ function App() {
 
   const [taskField, setTaskField] = useState<string>('')
   const [sideBarStatus, setSideBarStatus] = useState<boolean>(false)
+  const [modalStatus, setModalStatus] = useState<boolean>(false)
   const [selectedTaskId, setSelectedTaskId] = useState<number|null>(null)
   const [selectedListId, setSelectedListId] = useState<number|'None'>('None')
 
@@ -103,8 +106,8 @@ function App() {
     setTaskField(e.target.value)
   }
 
-  const changeSideBarStatus = (e:any) => {
-    setSideBarStatus(!sideBarStatus)
+  const changeModalStatus = (e:any) => {
+    setModalStatus(!modalStatus)
   }
 
   const injectCallbacks = (task:Task) => {
@@ -147,7 +150,7 @@ function App() {
   
   return (
     <Container className={classes.container}>
-
+      <EditListModal isOpen={modalStatus} closeFunc={setModalStatus} />
       {/* Header Area */}
       <Box>
       <Paper className={classes.paperHead}>
@@ -187,9 +190,10 @@ function App() {
             {listList ? listList.map((list:List) => (
               <MenuItem value={list.id}>{list.name}</MenuItem>
             )) 
-            : null}
+            : null} 
           </Select>
           <FormHelperText>Filter by List</FormHelperText>
+          <EditIcon onClick={changeModalStatus}/>
           </Box>
 
           {taskList ? taskList.map((task:Task) => (

@@ -35,7 +35,8 @@ const listsSlice = createSlice({
             })
         },
         removeList: (state, action: PayloadAction<number>) => {
-            state.lists.filter((list:List) => list.id !== action.payload)
+            let result = state.lists.filter((list:List) => list.id !== action.payload)
+            state.lists = result
         }
     },
 
@@ -69,6 +70,7 @@ export const deleteList = (id:number) => async (dispatch:any) => {
         method: 'DELETE',
         headers: {'Content-Type':'application/json'},
     })
+ 
     dispatch(listsSlice.actions.removeList(id))
 }
 
