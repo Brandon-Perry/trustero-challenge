@@ -3,7 +3,8 @@ import './App.css';
 import {useAppDispatch, useAppSelector} from './store/hooks'
 import taskSlice, {fetchTasks, createTask, deleteTask, editTask, createComment, deleteComment, TaskWithCallbacks} from './store/taskSlice'
 import {fetchLists, createList, deleteList, editList} from './store/listsSlice'
-import { Box, Button, Container, createStyles, Grid, makeStyles, Paper, Theme, Typography, TextField } from '@material-ui/core';
+import { Box, Button, Container, createStyles, Grid, makeStyles, Paper, Theme, Typography, TextField, Select, MenuItem, FormHelperText } from '@material-ui/core';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import TaskItem from './components/TaskItem'
 import SideBar from './components/SlideBar'
@@ -23,6 +24,8 @@ export const useStyles = makeStyles((theme:Theme)=> {
       padding:theme.spacing(2),
       minHeight:'80vh',
       display:'flex',
+      // justifyContent: 'center',
+      // flexDirection: 'row'
     },
     paperHead: {
       padding:theme.spacing(2),
@@ -30,8 +33,8 @@ export const useStyles = makeStyles((theme:Theme)=> {
       justifyContent: 'center',
     },
     taskGrid: {
-      spacing: 10,
-      justifyContent:"space-evenly",
+      spacing: 1,
+      // justifyContent:"space-evenly",
       alignContent:"center",
 
     },
@@ -58,6 +61,13 @@ export const useStyles = makeStyles((theme:Theme)=> {
     },
     taskItemTextCompleted: {
       textDecoration: 'line-through'
+    },
+    trashCan: {
+      fontSize:60,
+      '&:hover': {
+        color: '#424242',
+        
+      }
     }
   })
 })
@@ -73,6 +83,7 @@ function App() {
   const [taskField, setTaskField] = useState<string>('')
   const [sideBarStatus, setSideBarStatus] = useState<boolean>(false)
   const [selectedTaskId, setSelectedTaskId] = useState<number|null>(null)
+  const [selectedListId, setSelectedListId] = useState<number|'None'>('None')
 
   useEffect(() => {
     dispatch(fetchTasks())
@@ -107,17 +118,33 @@ function App() {
     return <TaskItem {...data} />
   }
 
+  const displayTasks = (task:Task) => {
+    if (selectedListId === task.list_id || selectedListId === 'None') {
+      return injectCallbacks(task)
+    } else {
+      return null
+    }
+  }
+
   const displayModal = () => {
     const task = taskList.filter((task:Task) => task.id === selectedTaskId)[0]
     return <SideBar {...task} />
   }
+
+  const changeSelectedListId = (e:any) => {
+    setSelectedListId(e.target.value)
+  }  
+
+  
   
   return (
     <Container className={classes.container}>
+
+      {/* Header Area */}
       <Box>
       <Paper className={classes.paperHead}>
         <Box className={classes.addTaskBox}>
-          <button onClick={changeSideBarStatus}>Press me</button>
+          {/* <button onClick={changeSideBarStatus}>Press me</button> */}
 
           <TextField 
             onKeyPress={enterTask} 
@@ -128,22 +155,43 @@ function App() {
             label="New Task - Press Enter" 
             variant="outlined" 
           />
+          <DeleteForeverIcon className={classes.trashCan}/>
 
         </Box>
       </Paper>
+
+      {/* Body */}
       <Paper className={classes.paperBody}>
+
+       
+
+        {/* Task Items */}
         <Grid 
           container 
           direction='column' 
-          justify="space-evenly"
           alignItems="center"
+          spacing={1}
         >
+           {/* Task filter */}
+          <Box>
+          <Select value={selectedListId} onChange={changeSelectedListId}>
+            <MenuItem value={"None"}>None</MenuItem>
+            {listList ? listList.map((list:List) => (
+              <MenuItem value={list.id}>{list.name}</MenuItem>
+            )) 
+            
+            : null}
+          </Select>
+          </Box>
+
           {taskList ? taskList.map((task:Task) => (
-            injectCallbacks(task)
+            displayTasks(task)
           )) : null}
         </Grid>
       </Paper>
       </Box>
+
+      {/* Side bar */}
       <Box>
         {sideBarStatus ? 
           displayModal()

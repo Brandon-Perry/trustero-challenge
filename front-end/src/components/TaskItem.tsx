@@ -30,7 +30,7 @@ const TaskItem = ({id, title, description, list_id, status, callBacks}:TaskWithC
             <Paper className={status ? classes.paperItemCompleted : classes.paperItem}>
                 <Checkbox checked={status} onClick={checkTask} />
                 <Typography 
-                    className={status ? classes.taskItemTextCompleted : classes.taskItemText} display={'inline'}>{title}</Typography>
+                    className={status ? classes.taskItemTextCompleted : classes.taskItemText} display={'inline'}>{title} {list_id}</Typography>
             </Paper>
         </Grid>
     )
