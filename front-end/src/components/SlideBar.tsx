@@ -8,21 +8,18 @@ import { idText } from 'typescript';
 
 const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
     const dispatch = useAppDispatch()
-    let listsList = useAppSelector(state => state.listsSlice.lists)
+    let listsList = useAppSelector<List[]>(state => state.listsSlice.lists)
     
     const [titleValue, setTitleValue] = useState<string>(title)
     const [descriptionValue, setDescriptionValue] = useState<string>(description)
     const [newCommentValue, setNewCommentValue] = useState<string>('')
-    const [selectedList, setSelectedList] = useState<List>()
+    const [selectedListId, setSelectedListId] = useState<number>(list_id)
 
     useEffect(()=> {
         setTitleValue(title)
         setDescriptionValue(description)
+        setSelectedListId(list_id)
     },[id]) //Values carry on from previously selected tasks because the component doesn't rerender. This in effect cleans it up
-
-    const cleanupFunction = () => {
-        setTitleValue(title)
-    }
 
     const updateTitleValue = (e:ChangeEvent<HTMLTextAreaElement>) => {
         setTitleValue(e.target.value)
@@ -43,17 +40,19 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
         }
     }
 
-    const submitChanges = () => {
-        dispatch(editTask(id,titleValue,descriptionValue,status,list_id))
+    const changeSelectedListId = (e:any) => {
+        setSelectedListId(e.target.value)
     }
 
-    const changeSelectedList = (e:any) => {
-        setSelectedList(e.target.value)
+    const submitChanges = () => {
+        dispatch(editTask(id,titleValue,descriptionValue,status,selectedListId))
     }
+
+    
+
 
     return (
     <Container>
-        {console.log(title)}
         <Box>
             <TextField 
                 onChange={updateTitleValue}
@@ -71,15 +70,16 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
             />
         </Box>
         <Box>
-            {/* <Select
-                value={selectedList.name}
-                onChange={changeSelectedList}
+            <Select
+                value={selectedListId}
+                onChange={changeSelectedListId}
             >
-                {listsList.map((list:List) => (
-                    <MenuItem value={list}>{list.name}</MenuItem>
-                ))}
+                {listsList ? listsList.map((list:List) => (
+                    <MenuItem value={list.id}>{list.name}</MenuItem>
+                ))
+                : null}
 
-            </Select> */}
+            </Select>
         </Box>
         <Box>
             <Typography>Status: {status ? 'Done' : 'In Progress'}</Typography>
