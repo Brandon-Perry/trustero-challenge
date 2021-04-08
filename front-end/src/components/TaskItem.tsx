@@ -1,4 +1,4 @@
-import { Grid, Theme, Paper, ThemeProvider, Checkbox } from '@material-ui/core'
+import { Grid, Theme, Paper, ThemeProvider, Checkbox, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import {TaskWithCallbacks, editTask} from '../store/taskSlice'
 import {useStyles} from '../App'
@@ -27,8 +27,10 @@ const TaskItem = ({id, title, description, list_id, status, callBacks}:TaskWithC
 
     return (
         <Grid onClick={openModal} item className={classes.taskItem}>
-            <Paper className={classes.paperItem}>
-                <Checkbox onClick={checkTask} />{title}
+            <Paper className={status ? classes.paperItemCompleted : classes.paperItem}>
+                <Checkbox checked={status} onClick={checkTask} />
+                <Typography 
+                    className={status ? classes.taskItemTextCompleted : classes.taskItemText} display={'inline'}>{title}</Typography>
             </Paper>
         </Grid>
     )

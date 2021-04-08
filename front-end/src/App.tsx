@@ -44,10 +44,20 @@ export const useStyles = makeStyles((theme:Theme)=> {
         backgroundColor: '#e0e0e0',
       }
     },
+    paperItemCompleted: {
+      width: '400px',
+      backgroundColor: '#757575'
+    },
     addTaskBox: {
       display:'flex',
       justifyContent: 'center',
       width:'500px'
+    },
+    taskItemText: {
+
+    },
+    taskItemTextCompleted: {
+      textDecoration: 'line-through'
     }
   })
 })
