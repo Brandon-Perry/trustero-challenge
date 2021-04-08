@@ -17,13 +17,22 @@ interface Comment_Delete {
     task_id:number
 }
 
+interface passedCallBacks {
+    setSideBarStatus: any,
+    setSelectedTaskId: any
+}
+
 export interface Task {
     id:number,
     title:string,
     description:string,
     status:boolean,
     list_id:number,
-    comments:Comment[]
+    comments:Comment[],
+}
+
+export interface TaskWithCallbacks extends Task {
+    callBacks: passedCallBacks
 }
 
 export interface TaskList {
@@ -117,7 +126,7 @@ export const createTask = (title:string, description?:string, list_id?:number) =
         body: JSON.stringify({
             'title':title,
             'description':description,
-            'list_id':list_id
+            'list_id':list_id,
         })
     })
     const data = await taskRes.json()
@@ -133,14 +142,15 @@ export const deleteTask = (id:number) => async (dispatch:any) => {
     dispatch(taskSlice.actions.removeTask(id))
 }
 
-export const editTask = (id:number,title:string,description:string,list_id?:number) => async(dispatch:any) => {
+export const editTask = (id:number,title?:string,description?:string,status?:boolean,list_id?:number) => async(dispatch:any) => {
     const taskRes = await fetch(`/api/tasks/${id}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
             'title': title,
             'description':description,
-            'list_id':list_id
+            'list_id':list_id,
+            'status':status
         })
     })
     const data = await taskRes.json()

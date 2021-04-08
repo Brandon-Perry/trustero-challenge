@@ -45,9 +45,15 @@ def create_task():
 @task_routes.route('/<id>', methods=['PUT'])
 def edit_task(id):
     task = Task.query.get(id)
-    task.title = request.get_json().get('title')
-    task.description = request.get_json().get('description')
-    task.list_id = request.get_json().get('list_id')
+    if (request.get_json().get('title') != None):
+        task.title = request.get_json().get('title')
+    if (request.get_json().get('description') != None):
+        task.description = request.get_json().get('description')
+    if (request.get_json().get('list_id') != None):
+        task.list_id = request.get_json().get('list_id')
+    if (request.get_json().get('status') != None):
+        task.status = request.get_json().get('status')
+
 
     db.session.commit()
 

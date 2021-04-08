@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useEffect, useState, KeyboardEvent, ChangeEvent } from 'react';
 import './App.css';
 import {useAppDispatch, useAppSelector} from './store/hooks'
-import {fetchTasks, createTask, deleteTask, editTask, createComment, deleteComment} from './store/taskSlice'
+import taskSlice, {fetchTasks, createTask, deleteTask, editTask, createComment, deleteComment, TaskWithCallbacks} from './store/taskSlice'
 import {fetchLists, createList, deleteList, editList} from './store/listsSlice'
 import { Box, Button, Container, createStyles, Grid, makeStyles, Paper, Theme, Typography, TextField } from '@material-ui/core';
 
@@ -10,6 +10,7 @@ import SideBar from './components/SlideBar'
 
 import {Task} from './store/taskSlice'
 import {List} from './store/listsSlice'
+import { Nullish } from '@testing-library/dom';
 
 export const useStyles = makeStyles((theme:Theme)=> {
   return createStyles({
@@ -35,11 +36,13 @@ export const useStyles = makeStyles((theme:Theme)=> {
 
     },
     taskItem: {
-      width: '400px'
+      width: '400px',
     },
     paperItem: {
       width:'400px',
-      
+      '&:hover': {
+        backgroundColor: '#e0e0e0',
+      }
     },
     addTaskBox: {
       display:'flex',
@@ -59,10 +62,12 @@ function App() {
 
   const [taskField, setTaskField] = useState<string>('')
   const [sideBarStatus, setSideBarStatus] = useState<boolean>(false)
+  const [selectedTaskId, setSelectedTaskId] = useState<number|null>(null)
 
   useEffect(() => {
     dispatch(fetchTasks())
     dispatch(fetchLists())
+    
   },[])
 
 
@@ -81,7 +86,21 @@ function App() {
     setSideBarStatus(!sideBarStatus)
   }
 
-  
+  const injectCallbacks = (task:Task) => {
+    const data:TaskWithCallbacks = {
+      ...task,
+      callBacks: {
+        setSelectedTaskId: setSelectedTaskId,
+        setSideBarStatus: setSideBarStatus
+      }
+    }
+    return <TaskItem {...data} />
+  }
+
+  const displayModal = () => {
+    const task = taskList.filter((task:Task) => task.id === selectedTaskId)[0]
+    return <SideBar {...task} />
+  }
   
   return (
     <Container className={classes.container}>
@@ -110,13 +129,14 @@ function App() {
           alignItems="center"
         >
           {taskList ? taskList.map((task:Task) => (
-            <TaskItem {...task} />
+            injectCallbacks(task)
           )) : null}
         </Grid>
       </Paper>
       </Box>
       <Box>
-        {sideBarStatus ? <SideBar {...taskList[0]} />
+        {sideBarStatus ? 
+          displayModal()
         : null}
       </Box>
     </Container>
