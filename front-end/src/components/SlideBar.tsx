@@ -19,6 +19,7 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
         setTitleValue(title)
         setDescriptionValue(description)
         setSelectedListId(list_id)
+        setNewCommentValue('')
     },[id]) //Values carry on from previously selected tasks because the component doesn't rerender. This in effect cleans it up
 
     const updateTitleValue = (e:ChangeEvent<HTMLTextAreaElement>) => {
@@ -53,6 +54,7 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
 
     return (
     <Container>
+        {/* Text field for title */}
         <Box>
             <TextField 
                 onChange={updateTitleValue}
@@ -61,6 +63,8 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
                 variant='outlined'
             />
         </Box>
+
+        {/* Text field for description */}
         <Box>
             <TextField 
                 onChange={updateDescriptionValue}
@@ -69,6 +73,8 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
                 variant='outlined'
             />
         </Box>
+
+        {/* Select field for lists */}
         <Box>
             <Select
                 value={selectedListId}
@@ -81,17 +87,25 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
 
             </Select>
         </Box>
+
+        {/* Task status */}
         <Box>
             <Typography>Status: {status ? 'Done' : 'In Progress'}</Typography>
         </Box>
+
+        {/* Submit button */}
         <Box>
             <Button onClick={submitChanges}>Save Changes</Button>
         </Box>
+
+        {/* Comments */}
         <Box>
             <Typography>Comments</Typography>
             {comments ? comments.map((comment:Comment) => (
                 <Typography>{comment.comment_text}</Typography>
             )): null}
+
+            {/* Textfield for comments */}
             <Box>
                 <TextField
                     onKeyPress={enterComment}
