@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request
 
 from ..models import Task, db 
 
+from .comment_routes import delete_comment
+
 task_routes = Blueprint('tasks', __name__)
 #Get all tasks - works
 @task_routes.route('/')
@@ -65,13 +67,14 @@ def edit_task(id):
 @task_routes.route('/<id>', methods=['DELETE'])
 def delete_task(id):
     
-    print('------')
-    print(id)
     task = Task.query.get(int(id))
-    print(task)
+
+    #Delete comments linked to task
+    for comment in task.comments:
+        delete_comment(comment.id)
+
     db.session.delete(task)
-    print('got past delete')
-    # db.session.commit()
+    db.session.commit()
     print('got past commit')
     print('------')
 

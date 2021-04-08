@@ -135,6 +135,14 @@ function App() {
     setSelectedListId(e.target.value)
   }  
 
+  const deleteSelectedTasks = (e:any) => {
+    for (let task of taskList) {
+      if (task.status) {//if task is complete 
+        dispatch(deleteTask(task.id))
+      }
+    }
+  }
+
   
   
   return (
@@ -155,7 +163,7 @@ function App() {
             label="New Task - Press Enter" 
             variant="outlined" 
           />
-          <DeleteForeverIcon className={classes.trashCan}/>
+          <DeleteForeverIcon onClick={deleteSelectedTasks} className={classes.trashCan}/>
 
         </Box>
       </Paper>
@@ -179,9 +187,9 @@ function App() {
             {listList ? listList.map((list:List) => (
               <MenuItem value={list.id}>{list.name}</MenuItem>
             )) 
-            
             : null}
           </Select>
+          <FormHelperText>Filter by List</FormHelperText>
           </Box>
 
           {taskList ? taskList.map((task:Task) => (
