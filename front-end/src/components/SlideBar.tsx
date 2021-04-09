@@ -1,6 +1,6 @@
 import { Container, Box, TextField, Typography, Button, Select, MenuItem, Paper, Divider } from '@material-ui/core';
 import React, {ChangeEvent, useState, KeyboardEvent, useEffect} from 'react';
-import {Task, Comment, createComment, editTask, editComment} from '../store/taskSlice'
+import {Task, Comment, createComment, editTask, editComment, deleteComment} from '../store/taskSlice'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
 import { List } from '../store/listsSlice';
 import EditIcon from '@material-ui/icons/Edit';
@@ -66,7 +66,9 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
     }
 
     
-
+    const deleteCommentDispatch = (comment_id:number, task_id:number) => {
+        dispatch(deleteComment(comment_id, task_id))
+    }
 
     return (
     <Container className={classes.sideBarContainer}>
@@ -142,6 +144,7 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
                         /> 
                         : comment.comment_text}
                         <EditIcon onClick={()=> focusCommentEdit(comment.comment_text, comment.id)} />
+                        <DeleteForever onClick={()=> deleteCommentDispatch(comment.id, comment.task_id)} />
                     </Box>
                 )
             })}

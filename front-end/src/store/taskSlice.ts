@@ -197,7 +197,7 @@ export const editComment = (comment_text:string, id:number) => async(dispatch:an
 
 export const deleteComment = (comment_id:number,task_id:number) => async(dispatch:any) => {
     const res = await fetch(`/api/comments/${comment_id}`, {
-        method:'POST',
+        method:'DELETE',
         headers: {'Content-Type':'application/json'},
     })
     // const data = await res.json()
