@@ -31,7 +31,7 @@ REQUIEMENTS:
             Done, though perhaps a little cludgy imo
     Tasks:
     ● By default, the tasks should only display the title and status
-        Done
+        Done. The status is displayed implicetly through the styling (completed tasks are checked, crossed out, and darkened)
 
     ● When an individual task is clicked, the application should display the full details of that task,
         such as it’s title, description, status, and all associated comments.
