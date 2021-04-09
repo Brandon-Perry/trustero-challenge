@@ -49,6 +49,8 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
     const submitEditCommentText = (e:KeyboardEvent) => {
         if (e.code === 'Enter' && commentEditID) {
             dispatch(editComment(commentEditText, commentEditID))
+            setCommentEditID(null)
+            setCommentEditText('')
         }
     }
 
@@ -63,6 +65,7 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
 
     const submitChanges = () => {
         dispatch(editTask(id,titleValue,descriptionValue,status,selectedListId))
+        
     }
 
     
