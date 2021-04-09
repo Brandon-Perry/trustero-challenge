@@ -136,8 +136,7 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
             <Typography>Comments</Typography>
             {comments.map((comment:Comment) => {
                 return (
-                    <Box className={classes.commentBox}>
-                        {console.log(commentEditText)}
+                    <Box border={1} className={classes.commentBox}>
                         {commentEditID === comment.id ? 
                         <TextField 
                         value={commentEditText}

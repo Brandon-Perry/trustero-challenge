@@ -151,7 +151,6 @@ export const deleteTask = (id:number) => async (dispatch:any) => {
         method: 'DELETE',
         headers: {'Content-Type':'application/json'},
     })
-    console.log(res)
     dispatch(taskSlice.actions.removeTask(id))
 }
 
@@ -191,7 +190,6 @@ export const editComment = (comment_text:string, id:number) => async(dispatch:an
         })
     })
     const data = await commentRes.json()
-    console.log('thunk data', data)
     dispatch(taskSlice.actions.changeComment(data))
 }
 

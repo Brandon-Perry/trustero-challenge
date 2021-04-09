@@ -8,11 +8,9 @@ list_routes = Blueprint('lists',__name__)
 @list_routes.route('/')
 def get_lists():
     all_lists = List.query.all()
-    print('------')
-    print(all_lists)
+    
     data = [task_list.to_dict() for task_list in all_lists]
-    print(data)
-    print('-----')
+    
     return jsonify(data)
 
 #Get single list - works
@@ -36,11 +34,9 @@ def create_list():
 #edit list - works
 @list_routes.route('/<id>', methods=['PUT'])
 def edit_list(id):
-    print('-------')
-    print(id)
+    
     edit_list = List.query.get(id)
-    print(edit_list)
-    print('-------')
+    
     edit_list.name = request.get_json().get('name')
     db.session.commit()
 

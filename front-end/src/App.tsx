@@ -55,7 +55,8 @@ export const useStyles = makeStyles((theme:Theme)=> {
     },
     commentBox: {
       padding: theme.spacing(1),
-      wordWrap:'break-word'
+      wordWrap:'break-word',
+      margin: theme.spacing(1)
     },
     taskItem: {
       width: '400px',
