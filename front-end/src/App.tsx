@@ -22,6 +22,13 @@ export const useStyles = makeStyles((theme:Theme)=> {
       justifyContent:'center',
       flexDirection:'row'
     },
+    sideBarContainer: {
+      padding:theme.spacing(2),
+      maxWidth:'30vw'
+    },
+    dialogue: {
+      margin: theme.spacing(2)
+    },
     paperBody: {
       padding:theme.spacing(2),
       minHeight:'80vh',
@@ -34,11 +41,21 @@ export const useStyles = makeStyles((theme:Theme)=> {
       display: 'flex',
       justifyContent: 'center',
     },
+    paperSideBar: {
+      padding: theme.spacing(2)
+    },
+    sideBarBox: {
+      padding: theme.spacing(2)
+    },
     taskGrid: {
       spacing: 1,
       // justifyContent:"space-evenly",
       alignContent:"center",
 
+    },
+    commentBox: {
+      padding: theme.spacing(1),
+      wordWrap:'break-word'
     },
     taskItem: {
       width: '400px',
@@ -69,6 +86,11 @@ export const useStyles = makeStyles((theme:Theme)=> {
       '&:hover': {
         color: '#424242',
         
+      }
+    },
+    smallIcon: {
+      '&:hover': {
+        color: '#424242',
       }
     }
   })
@@ -184,16 +206,19 @@ function App() {
           spacing={1}
         >
            {/* Task filter */}
-          <Box>
-          <Select value={selectedListId} onChange={changeSelectedListId}>
-            <MenuItem value={"None"}>None</MenuItem>
-            {listList ? listList.map((list:List) => (
-              <MenuItem value={list.id}>{list.name}</MenuItem>
-            )) 
-            : null} 
-          </Select>
-          <FormHelperText>Filter by List</FormHelperText>
-          <EditIcon onClick={changeModalStatus}/>
+          <Box display='flex' flexDirection='row'>
+            <Box>
+              <Select value={selectedListId} onChange={changeSelectedListId}>
+                <MenuItem value={"None"}>None</MenuItem>
+                {listList ? listList.map((list:List) => (
+                  <MenuItem value={list.id}>{list.name}</MenuItem>
+                )) 
+                : null} 
+              </Select>
+              <FormHelperText>Filter by List</FormHelperText>
+            </Box>
+          <EditIcon className={classes.smallIcon} display='inline' onClick={changeModalStatus}/>
+
           </Box>
 
           {taskList ? taskList.map((task:Task) => (

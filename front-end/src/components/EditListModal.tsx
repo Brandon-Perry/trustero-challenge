@@ -1,15 +1,17 @@
 import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react'
-import {Dialog, DialogTitle, List, ListItem, ListItemText, TextField} from '@material-ui/core/';
+import {Dialog, DialogTitle, List, ListItem, ListItemText, Box, TextField} from '@material-ui/core/';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { List as ListInterface}  from '../store/listsSlice';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import {createList, deleteList} from '../store/listsSlice'
 import taskSlice, { deleteTask, Task } from '../store/taskSlice';
-
+import {useStyles} from '../App'
 
 
 const EditListModal = ({isOpen, closeFunc}:any) => {
+
+    const classes = useStyles()
 
     const dispatch = useAppDispatch()
     
@@ -42,22 +44,24 @@ const EditListModal = ({isOpen, closeFunc}:any) => {
         open={isOpen}
         onClose={()=> closeFunc(false)}
        >
-            <TextField 
-                onKeyPress={enterList}
-                value={newListValue}
-                onChange={changeNewListValue}
-                label={'Add List - Press Enter'}
-                variant='outlined'
-            />
-            <DialogTitle>Edit Lists</DialogTitle>
-            <List>
-                {listLists.map((list:ListInterface)=> {
-                    return (<ListItem>
-                        <ListItemText primary={list.name} />
-                        <DeleteForeverIcon onClick={()=>deleteListFunc(list.id)}/>
-                    </ListItem>)
-                })}
-            </List>
+           <Box className={classes.dialogue}>
+                <TextField 
+                    onKeyPress={enterList}
+                    value={newListValue}
+                    onChange={changeNewListValue}
+                    label={'Add List - Press Enter'}
+                    variant='outlined'
+                />
+                <DialogTitle>Edit Lists</DialogTitle>
+                <List>
+                    {listLists.map((list:ListInterface)=> {
+                        return (<ListItem>
+                            <ListItemText primary={list.name} />
+                            <DeleteForeverIcon className={classes.smallIcon} onClick={()=>deleteListFunc(list.id)}/>
+                        </ListItem>)
+                    })}
+                </List>
+            </Box>
 
        </Dialog>
     )

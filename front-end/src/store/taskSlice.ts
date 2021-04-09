@@ -1,3 +1,4 @@
+import { Comment } from '@material-ui/icons'
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import { Dispatch } from 'react'
 import { act } from 'react-dom/test-utils'
@@ -71,6 +72,18 @@ const taskSlice = createSlice({
                 if (task.id === action.payload.task_id) {
                     state.tasks[i].comments = [...state.tasks[i].comments, action.payload]
                     return state.tasks
+                }
+            })
+        },
+        changeComment: (state, action: PayloadAction<Comment>) => {
+            state.tasks.map((task:Task) => {
+                if (task.id === action.payload.task_id) {
+                    task.comments.forEach((comment:Comment, i) => {
+                        if (comment.id === action.payload.id) {
+                            task.comments[i] = action.payload
+                            return state.tasks
+                        }
+                    })
                 }
             })
         },
@@ -167,6 +180,19 @@ export const createComment = (comment_text:string, task_id:number) => async(disp
     })
     const data = await commentRes.json()
     dispatch(taskSlice.actions.addComment(data))
+}
+
+export const editComment = (comment_text:string, id:number) => async(dispatch:any) => {
+    const commentRes = await fetch(`/api/comments/${id}`, {
+        method:'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+            'comment_text':comment_text,
+        })
+    })
+    const data = await commentRes.json()
+    console.log('thunk data', data)
+    dispatch(taskSlice.actions.changeComment(data))
 }
 
 export const deleteComment = (comment_id:number,task_id:number) => async(dispatch:any) => {

@@ -24,6 +24,15 @@ def create_comment(task_id):
     data = new_comment.to_dict()
     return jsonify(data)
 
+@comment_routes.route('/<id>', methods=['PUT'])
+def edit_comment(id):
+    comment = Comment.query.get(id)
+    comment.comment_text = request.get_json().get('comment_text')
+    db.session.commit()
+
+    data = comment.to_dict()
+    return jsonify(data)
+
 @comment_routes.route('/<id>', methods=['DELETE'])
 def delete_comment(id):
     comment = Comment.query.get(id)

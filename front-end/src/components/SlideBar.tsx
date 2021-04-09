@@ -1,19 +1,24 @@
-import { Container, Box, TextField, Typography, Button, Select, MenuItem } from '@material-ui/core';
+import { Container, Box, TextField, Typography, Button, Select, MenuItem, Paper, Divider } from '@material-ui/core';
 import React, {ChangeEvent, useState, KeyboardEvent, useEffect} from 'react';
-import {Task, Comment, createComment, editTask} from '../store/taskSlice'
+import {Task, Comment, createComment, editTask, editComment} from '../store/taskSlice'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
 import { List } from '../store/listsSlice';
-import { idText } from 'typescript';
+import EditIcon from '@material-ui/icons/Edit';
+import {useStyles} from '../App'
+import { ContactlessOutlined, DeleteForever } from '@material-ui/icons';
 
 
 const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
     const dispatch = useAppDispatch()
+    const classes = useStyles()
     let listsList = useAppSelector<List[]>(state => state.listsSlice.lists)
     
     const [titleValue, setTitleValue] = useState<string>(title)
     const [descriptionValue, setDescriptionValue] = useState<string>(description)
     const [newCommentValue, setNewCommentValue] = useState<string>('')
     const [selectedListId, setSelectedListId] = useState<number>(list_id)
+    const [commentEditID, setCommentEditID] = useState<number|null>(null)
+    const [commentEditText, setCommentEditText] = useState<string>('')
 
     useEffect(()=> {
         setTitleValue(title)
@@ -41,6 +46,17 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
         }
     }
 
+    const submitEditCommentText = (e:KeyboardEvent) => {
+        if (e.code === 'Enter' && commentEditID) {
+            dispatch(editComment(commentEditText, commentEditID))
+        }
+    }
+
+    const focusCommentEdit = (comment_text:string, comment_id:number) => {
+        setCommentEditID(comment_id)
+        setCommentEditText(comment_text)
+    }
+
     const changeSelectedListId = (e:any) => {
         setSelectedListId(e.target.value)
     }
@@ -53,9 +69,10 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
 
 
     return (
-    <Container>
+    <Container className={classes.sideBarContainer}>
         {/* Text field for title */}
-        <Box>
+        <Paper className={classes.paperSideBar}>
+        <Box className={classes.sideBarBox}>
             <TextField 
                 onChange={updateTitleValue}
                 value={titleValue}
@@ -64,19 +81,26 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
             />
         </Box>
 
+        <Divider />
+
         {/* Text field for description */}
-        <Box>
+        <Box className={classes.sideBarBox}>
             <TextField 
                 onChange={updateDescriptionValue}
                 value={descriptionValue}
                 label={'Task Description'}
                 variant='outlined'
-            />
+                multiline={true}
+                rows={2}
+                rowsMax={Infinity}
+        />
         </Box>
 
+        <Divider />
+
         {/* Select field for lists */}
-        <Box>
-            <Select
+        <Box className={classes.sideBarBox}>
+            List: <Select
                 value={selectedListId}
                 onChange={changeSelectedListId}
             >
@@ -88,23 +112,41 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
             </Select>
         </Box>
 
+        <Divider />
+
         {/* Task status */}
-        <Box>
+        <Box className={classes.sideBarBox}>
             <Typography>Status: {status ? 'Done' : 'In Progress'}</Typography>
         </Box>
 
+        <Divider />
+
         {/* Submit button */}
-        <Box>
-            <Button onClick={submitChanges}>Save Changes</Button>
+        <Box className={classes.sideBarBox}>
+            <Button variant='outlined' onClick={submitChanges}>Save Changes</Button>
         </Box>
 
         {/* Comments */}
-        <Box>
+        <Box className={classes.sideBarBox}>
             <Typography>Comments</Typography>
-            {comments ? comments.map((comment:Comment) => (
-                <Typography>{comment.comment_text}</Typography>
-            )): null}
-
+            {comments.map((comment:Comment) => {
+                return (
+                    <Box className={classes.commentBox}>
+                        {console.log(commentEditText)}
+                        {commentEditID === comment.id ? 
+                        <TextField 
+                        value={commentEditText}
+                        onFocus={()=> setCommentEditText(comment.comment_text)}
+                        onChange={(e)=> setCommentEditText(e.target.value)}
+                        onKeyPress={submitEditCommentText}
+                        /> 
+                        : comment.comment_text}
+                        <EditIcon onClick={()=> focusCommentEdit(comment.comment_text, comment.id)} />
+                    </Box>
+                )
+            })}
+            
+              
             {/* Textfield for comments */}
             <Box>
                 <TextField
@@ -120,6 +162,7 @@ const SlideBar = ({id, title, description, list_id, status, comments}:Task) => {
             </Box>
 
         </Box>
+        </Paper>
     </Container>
     )
 }
